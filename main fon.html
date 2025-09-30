@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>BULETIN FAMILY DAY MAK NAMAH 2025</title>
+<style>
+body{
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin:0;padding:0;
+    background: linear-gradient(135deg,#1f1c2c,#928dab);
+    color:#fff;
+    text-align:center;
+}
+header{
+    background: linear-gradient(to right,#ff416c,#ff4b2b);
+    padding:30px 0;
+    box-shadow:0 4px 15px rgba(0,0,0,0.4);
+}
+header h1{
+    margin:0;
+    font-size:2.2rem;
+    letter-spacing:2px;
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
+}
+.banner{
+    margin:0 auto;
+    width:100%;
+    max-width:100%;
+    border-radius:0;
+    overflow:hidden;
+    box-shadow:0 8px 20px rgba(0,0,0,0.5);
+}
+.banner img{
+    width:100%;
+    display:block;
+    max-height:300px;
+    object-fit:cover;
+}
+.kategori-buttons{
+    margin:20px 0;
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+}
+.kategori-buttons button{
+    background: linear-gradient(to right,#11998e,#38ef7d);
+    border:none;
+    padding:15px 25px;
+    margin:10px;
+    font-size:1rem;
+    color:white;
+    border-radius:10px;
+    cursor:pointer;
+    transition:0.3s;
+    box-shadow:0 4px 15px rgba(0,0,0,0.3);
+    flex:1 0 40%;
+}
+.kategori-buttons button:hover{
+    transform: translateY(-3px);
+    box-shadow:0 8px 20px rgba(0,0,0,0.5);
+}
+table{
+    margin:20px auto 50px;
+    border-collapse:collapse;
+    width:95%;
+    background: rgba(255,255,255,0.95);
+    color:#333;
+    border-radius:15px;
+    overflow:hidden;
+    box-shadow:0 10px 25px rgba(0,0,0,0.4);
+    font-size:0.9rem;
+}
+th,td{
+    padding:10px;
+    text-align:center;
+    border-bottom:1px solid #ddd;
+}
+th{
+    background: linear-gradient(to right,#141e30,#243b55);
+    color:#fff;
+    font-weight:700;
+    font-size:1rem;
+}
+tr:nth-child(even){background: #f0f0f0;}
+tr:hover{background: #d6d6d6;}
+.gold{background-color:#ffd700!important;font-weight:bold;animation:pulse 2s infinite;}
+.silver{background-color:#c0c0c0!important;font-weight:bold;animation:pulse 2s infinite;}
+.bronze{background-color:#cd7f32!important;font-weight:bold;animation:pulse 2s infinite;}
+@keyframes pulse{0%{box-shadow:0 0 10px rgba(0,0,0,0.2);}50%{box-shadow:0 0 25px rgba(0,0,0,0.6);}100%{box-shadow:0 0 10px rgba(0,0,0,0.2);}}
+@media (max-width:600px){
+    .kategori-buttons button{flex:1 0 80%; font-size:0.9rem; padding:12px;}
+    table{font-size:0.8rem;}
+    .banner img{max-height:200px;}
+}
+</style>
+</head>
+<body>
+<header>
+    <h1>BULETIN FAMILY DAY MAK NAMAH 2025</h1>
+</header>
+<div class="banner">
+    <img id="bannerImg" src="https://i.imgur.com/6WJ3Ot2.jpeg" alt="Banner Family Day">
+</div>
+<div class="kategori-buttons">
+    <button onclick="loadKategori('lelaki')">Lelaki Dewasa</button>
+    <button onclick="loadKategori('perempuan')">Perempuan Dewasa</button>
+    <button onclick="loadKategori('kanak')">Kanak-Kanak</button>
+</div>
+<table id="rankingTable">
+    <thead>
+        <tr id="tableHeader"><th>No</th><th>Nama</th><th>Total</th></tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
+import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
+
+const configs = {
+    lelaki:{
+        config:{apiKey:"AIzaSyCfExbX5ULB2iN0TFCZJH7mW5PuLL-sXuE",authDomain:"rasmi-familyday-mak-namah-2025.firebaseapp.com",databaseURL:"https://rasmi-familyday-mak-namah-2025-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"rasmi-familyday-mak-namah-2025",storageBucket:"rasmi-familyday-mak-namah-2025.firebasestorage.app",messagingSenderId:"89130136513",appId:"1:89130136513:web:06db8b10f93c55ece6f540",measurementId:"G-TBZ7J4TC4Q"},
+        banner:"https://i.imgur.com/6WJ3Ot2.jpeg",
+        pesertaCol:"admin-kemaskini-markah-dewasa-lelaki",
+        acaraCol:"senarai-acara"
+    },
+    perempuan:{
+        config:{apiKey:"AIzaSyCfExbX5ULB2iN0TFCZJH7mW5PuLL-sXuE",authDomain:"rasmi-familyday-mak-namah-2025.firebaseapp.com",databaseURL:"https://rasmi-familyday-mak-namah-2025-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"rasmi-familyday-mak-namah-2025",storageBucket:"rasmi-familyday-mak-namah-2025.firebasestorage.app",messagingSenderId:"89130136513",appId:"1:89130136513:web:8dcbf31a14a5be7ce6f540",measurementId:"G-4YDJ8MGWDT"},
+        banner:"https://i.imgur.com/fdzuRHO.jpeg",
+        pesertaCol:"admin-kemaskini-markah-dewasa-perempuan",
+        acaraCol:"senarai-acara-perempuan"
+    },
+    kanak:{
+        config:{apiKey:"AIzaSyCfExbX5ULB2iN0TFCZJH7mW5PuLL-sXuE",authDomain:"rasmi-familyday-mak-namah-2025.firebaseapp.com",databaseURL:"https://rasmi-familyday-mak-namah-2025-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"rasmi-familyday-mak-namah-2025",storageBucket:"rasmi-familyday-mak-namah-2025.firebasestorage.app",messagingSenderId:"89130136513",appId:"1:89130136513:web:d6663591fcc60264e6f540",measurementId:"G-CXBDXTN2SG"},
+        banner:"https://i.imgur.com/LSXxlpm.jpeg",
+        pesertaCol:"admin-kemaskini-markah-kanak",
+        acaraCol:"senarai-acara-kanak"
+    }
+};
+
+let currentApp=null, db=null, senaraiAcara=[];
+const bannerImg=document.getElementById('bannerImg');
+const tbody=document.querySelector('#rankingTable tbody');
+const theadRow=document.querySelector('#tableHeader');
+
+window.loadKategori=function(kat){
+    if(currentApp) currentApp=null;
+    const cfg=configs[kat];
+    currentApp=initializeApp(cfg.config, kat);
+    db=getFirestore(currentApp);
+    bannerImg.src=cfg.banner;
+
+    const pesertaColRef=collection(db,cfg.pesertaCol);
+    const acaraColRef=collection(db,cfg.acaraCol);
+
+    onSnapshot(query(acaraColRef, orderBy("createdAt","asc")), snap=>{
+        senaraiAcara=snap.docs.map(d=>({id:d.id,...d.data()}));
+        onSnapshot(pesertaColRef, snapPeserta=>{
+            tbody.innerHTML="";
+            theadRow.innerHTML="<th>No</th><th>Nama</th>"+senaraiAcara.map(a=>`<th>${a.nama}</th>`).join('')+"<th>Total</th>";
+            let pesertaList=snapPeserta.docs.map(p=>{
+                let data={id:p.id,...p.data()};
+                let total=0;
+                senaraiAcara.forEach(a=>total+=Number(data[a.id]||0));
+                return{...data,total};
+            });
+            pesertaList.sort((a,b)=>b.total-a.total);
+            pesertaList.forEach((p,i)=>{
+                let tr=document.createElement('tr');
+                let medal='',rowClass='';
+                if(i===0){rowClass='gold';medal=' 🥇';}
+                else if(i===1){rowClass='silver';medal=' 🥈';}
+                else if(i===2){rowClass='bronze';medal=' 🥉';}
+                const acaraCells=senaraiAcara.map(a=>`<td>${p[a.id]||0}</td>`).join('');
+                tr.innerHTML=`<td>${i+1}</td><td>${p.nama||'-'}${medal}</td>${acaraCells}<td>${p.total}</td>`;
+                if(rowClass) tr.classList.add(rowClass);
+                tbody.appendChild(tr);
+            });
+        });
+    });
+}
+
+// initial load
+loadKategori('lelaki');
+</script>
+</body>
+</html>
